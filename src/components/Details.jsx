@@ -2,22 +2,23 @@ import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import '../css/bootstrap.css';
 
-Details.propTypes = {};
+Details.propTypes = {
+    itemId: PropTypes.number
+};
 
 function Details(props) {
-    const {info} = props;
-    const depId = (info) ? info.id : null;
+    const { itemId } = props;
     const [content, setContent] = useState({});
     const [isLoading, setLoading] = useState(false);
     const [hasError, setError] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
-
+            if (!itemId) return;
             setLoading(true);
             try {
 
-                const response = await fetch(process.env.REACT_APP_DATA_URL.replace("{id}", info.id), {});
+                const response = await fetch(process.env.REACT_APP_DATA_URL.replace("{id}", itemId), {});
 
                 if (!response.ok) {
                     setError(response.statusText);
@@ -36,12 +37,14 @@ function Details(props) {
             }
         };
         fetchData();
-    }, [depId]);
+    }, [itemId]);
 
     const loadingBlock = <div className="loading-img"><p>Loading...</p></div>
 
     return (
-
+    <>
+        {hasError && <div>Error: {hasError.message}</div>}
+        {itemId &&
         <div className="col-md-5">
             <div className={'card'}>
                 {isLoading && loadingBlock}
@@ -58,8 +61,13 @@ function Details(props) {
                 </span>
             </div>
         </div>
-
+        }
+    </>
     );
 }
+
+Details.defaultProps = {
+  itemId: null
+};
 
 export default Details;

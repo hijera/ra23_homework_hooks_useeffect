@@ -6,14 +6,13 @@ import Details from "./components/Details";
 function App() {
     const [info,setInfo] = useState(null);
     const onChange =  (item) => {
-
         setInfo(item);
     };
   return (
     <div className="App">
         <div className="row">
           <List eventHandler ={onChange} />
-          <Details info={info} />
+          <Details itemId={info ? info.id : null} info={info} />
         </div>
     </div>
   );
